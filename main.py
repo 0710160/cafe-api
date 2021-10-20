@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, render_template, request
 from flask_sqlalchemy import SQLAlchemy
+from random import randint
 
 app = Flask(__name__)
 
@@ -23,11 +24,22 @@ class Cafe(db.Model):
     can_take_calls = db.Column(db.Boolean, nullable=False)
     coffee_price = db.Column(db.String(250), nullable=True)
 
+    def to_dict(self):
+        #Loop through each column in the database
+        return {column.name: getattr(self, column.name) for column in self.__table__.columns}
+
 
 @app.route("/")
 def home():
     return render_template("index.html")
-    
+
+
+@app.route("/random")
+def random():
+    cafe_count = Cafe.query.count()
+    random_cafe = Cafe.query.get(randint(1, cafe_count))
+    return jsonify(cafe=random_cafe.to_dict())
+
 
 ## HTTP GET - Read Record
 
