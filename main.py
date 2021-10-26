@@ -72,7 +72,7 @@ def add():
         coffee_price=request.form["coffee_price"])
     db.session.add(new_cafe)
     db.session.commit()
-    return jsonify(response={"Success": "Successfully added the new cafe."})
+    return jsonify(response={"Success": f"Successfully added the {new_cafe.name} cafe."})
 
 
 @app.route("/update_price/<cafe_id>", methods=["PATCH"])
@@ -96,9 +96,9 @@ def delete(cafe_id):
             db.session.commit()
             return jsonify(response={"Success": "Removed closed cafe."}), 200
         else:
-            return jsonify(response={"Not Found": "No cafe with that ID was found in the database."}), 403
+            return jsonify(response={"Not Found": "No cafe with that ID was found in the database."}), 404
     else:
-        return jsonify(response={"Error": "Sorry, that API key is invalid."})
+        return jsonify(response={"Error": "Sorry, that API key is invalid."}), 403
 
 
 ## HTTP GET - Read Record: this is the default for an @app.route so doesn't need to be defined explicitly
